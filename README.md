@@ -22,7 +22,7 @@ mvn package
 
 Then create a list of worker node hostnames, one line per file, in `workers.txt`. Finally, you can run a Jawns command:
 ```
-java -jar target/jawns-1.0-SNAPSHOT-jar-with-dependencies.jar --workers workers.txt --project test --command startup
+java -jar target/jawns-1.0-SNAPSHOT-jar-with-dependencies.jar --workers workers.txt --project test --command status
 ```
 
 ### Typical workflow
