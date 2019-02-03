@@ -11,11 +11,7 @@ The overall workflow looks like this:
 3. Gather results from the worker daemon(s) via the `gather` command
 4. There are a variety of other commands for checking job status, cancelling jobs, etc. Run Jawns with `--help` for more details.
 
-AWS Data Structures used:
-* Result Queue (SQS FIFO queue, from workers to the `gather` program)
-* Command Queue (SQS FIFO queue, to send messages to worker daemons)
-* Job Table (DynamoDB table)
-* File Transfer bucket (S3 bucket)
+There's no need for the job submission, `startup`, `gather` or other commands to be run from the same machine, since all state is stored in AWS, making each command essentially stateless. A notable exception is the `gather` command, which saves output to the local machine.
 
 Requirements:
 * the worker nodes need Java ≥1.8 installed (just the JRE, no JDK needed)
