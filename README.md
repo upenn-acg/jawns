@@ -9,7 +9,7 @@ The overall workflow looks like this:
 1. Write a Java program that links against the Jawns JAR and calls `boolean submitJobs(List<Job> theJobs)` to submit jobs to the cluster. [See example code](https://github.com/upenn-acg/jawns/blob/master/src/main/java/SubmitTestJobs.java).
 2. Launch worker daemon(s) on the worker node(s) via the `startup` command
 3. Gather results from the worker daemon(s) via the `gather` command
-4. There are a variety of other commands for checking job status, cancelling jobs, etc. See ``
+4. There are a variety of other commands for checking job status, cancelling jobs, etc. Run Jawns with `--help` for more details.
 
 AWS Data Structures used:
 * Result Queue (SQS FIFO queue, from workers to the `gather` program)
