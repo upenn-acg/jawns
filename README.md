@@ -39,3 +39,4 @@ There's no need for the job submission, `startup`, `gather` or other commands to
 * send email on job completion/failure
 * transfer files to/from workers before/after job completes
 * a job can be killed after a timeout is hit
+* can create multiple, independent Jawns clusters
