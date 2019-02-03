@@ -391,15 +391,20 @@ public class Jawns {
                 switch (wr.type) {
                     case JobFailed: {
                         // send email
-                        sendEmail(jName+" job failed",jName+" failed with exit code "+wr.exitCode+ (wr.jobTimedOut ? " (hit timeout)" : ""));
+                        sendEmail(jName+" failed",jName+" failed with exit code "+wr.exitCode+ (wr.jobTimedOut ? " (hit timeout)" : ""));
 
                         // clear out pre-files from S3
                         try {
                             JobTableEntry theJob = DBM.load(JobTableEntry.class, Failed, wr.jobid);
+                            if (null != theJob) {
+                                clearS3Files(theJob);
+                                break;
+                            }
+                            theJob = DBM.load(JobTableEntry.class, Canceled, wr.jobid);
                             assert null != theJob : wr.jobid;
                             clearS3Files(theJob);
                         }  catch (AmazonClientException e) {
-                            LOG.severe(t2s(e, "error clearing S3 files for job"+wr.jobid));
+                            LOG.severe(t2s(e, "error clearing S3 files for "+jName));
                         }
                         LOG.info(jName+" failed with exit code "+wr.exitCode);
                         break; }
@@ -408,7 +413,7 @@ public class Jawns {
                         jobdir.mkdirs();
 
                         // send email
-                        sendEmail(jName+" job succeeded","");
+                        sendEmail(jName+" succeeded","");
 
                         // download post-files from S3 (and then clear S3 files for this job)
                         try {
@@ -422,10 +427,10 @@ public class Jawns {
                             clearS3Files(theJob);
                             LOG.info(jName+" succeeded with exit code "+wr.exitCode);
                             if (!dlAllPostFiles) {
-                                LOG.severe("error downloading post-files for job"+wr.jobid);
+                                LOG.severe("error downloading post-files for "+jName);
                             }
                         }  catch (AmazonClientException e) {
-                            LOG.severe(t2s(e, "error downloading post-files for job"+wr.jobid));
+                            LOG.severe(t2s(e, "error downloading post-files for "+jName));
                         }
                         break; }
                     case JobOutput:
@@ -435,23 +440,23 @@ public class Jawns {
                         switch (wr.outputType) {
                             case JobStdout:
                                 f = new File(jobdir, wr.jobName()+".stdout");
-                                assert f.length() == wr.startingByteIndex : "mismatched length,SBI "+f.length()+","+wr.startingByteIndex;
+                                assert f.length() == wr.startingByteIndex : jName+" mismatched length,SBI "+f.length()+","+wr.startingByteIndex;
                                 break;
                             case JobStderr:
                                 f = new File(jobdir, wr.jobName()+".stderr");
-                                assert f.length() == wr.startingByteIndex : "mismatched length,SBI "+f.length()+","+wr.startingByteIndex;
+                                assert f.length() == wr.startingByteIndex : jName+" mismatched length,SBI "+f.length()+","+wr.startingByteIndex;
                                 break;
                             case JobLog:
                                 f = new File(jobdir, wr.jobName()+".log");
                                 break;
                             default:
-                                LOG.severe("Unknown WorkerResult.outputType " + wr.outputType);
+                                LOG.severe("Unknown WorkerResult.outputType " + wr.outputType + " "+jName);
                                 continue; // goto next message
                         }
                         try (FileOutputStream fos = new FileOutputStream(f,true)) {
                             fos.write(wr.output);
                         } catch (IOException e) {
-                            LOG.severe(t2s(e,"error writing to stdout/stderr/log file"));
+                            LOG.severe(t2s(e,"error writing to stdout/stderr/log file for "+jName));
                         }
                         break;
                 }

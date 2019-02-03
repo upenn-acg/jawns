@@ -124,7 +124,7 @@ public class Worker {
             // download pre-files from S3
             for (Map.Entry<String, File> sf : job.getS3PreFiles().entrySet()) {
                 String s3ID = sf.getKey();
-                File local = sf.getValue();
+                File local = sf.getValue().isAbsolute() ? sf.getValue() : new File(pb.directory(), sf.getValue().getPath()); // NB: File ctor ignores 1st arg if null
                 boolean dlok = J.downloadS3File(s3ID, local);
                 if (!dlok) {
                     // if we can't download the pre-files, log the error and mark job as failed
