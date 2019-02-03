@@ -13,7 +13,7 @@ No shared filesystem (e.g., NFS), or direct communication between Jawns componen
 
 ### Building & Running
 
-After clong the repo, fill in your AWS credentials (access key and secret key) in `src/main/resources/aws-credentials.properties`. These credentials need to grant full access to the AWS services that Jawns uses: [SQS, SES, S3 and DynamoDB](https://github.com/upenn-acg/jawns/wiki/JAWNS-Architecture).
+After clong the repo, fill in your AWS credentials (access key and secret key) in `src/main/resources/aws-credentials.properties` (see [the sample file](https://github.com/upenn-acg/jawns/blob/master/src/main/resources/aws-credentials.properties.sample) for the required format). These credentials need to grant full access to the AWS services that Jawns uses: [SQS, SES, S3 and DynamoDB](https://github.com/upenn-acg/jawns/wiki/JAWNS-Architecture).
 
 Then build the JAR file via maven:
 ```
