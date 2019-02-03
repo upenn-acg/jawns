@@ -28,8 +28,8 @@ java -jar target/jawns-1.0-SNAPSHOT-jar-with-dependencies.jar --workers workers.
 ### Typical workflow
 
 1. Write a Java program that links against the Jawns JAR and calls `boolean submitJobs(List<Job> theJobs)` to submit jobs to the cluster. [See example code](https://github.com/upenn-acg/jawns/blob/master/src/main/java/SubmitTestJobs.java).
-2. Launch worker daemon(s) on the worker node(s) via the `startup` command
-3. Gather results from the worker daemon(s) via the `gather` command
+2. Launch worker daemons on the worker nodes via the `startup` command
+3. Gather results from the worker daemons via the `gather` command
 4. There are a variety of other commands for checking job status, cancelling jobs, etc. Run Jawns with `--help` for more details.
 
 There's no need for the job submission, `startup`, `gather` or other commands to be run from the same machine, since all state is stored in AWS, making each command essentially stateless. A notable exception is the `gather` command, which saves output to the local machine.
